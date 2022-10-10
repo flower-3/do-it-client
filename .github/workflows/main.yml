@@ -48,7 +48,7 @@ jobs:
           username: ${{ secrets.EC2_USERNAME }}
           key: ${{ secrets.EC2_PEM_KEY }}
           script: |
-            sudo docker rm -f $(docker ps -af "ancestor=do-it-client")
+            sudo docker rm -f $(docker ps -af "name=do-it-client")
             sudo docker pull ${{secrets.DOCKERHUB_USERNAME}}/${{secrets.DOCKER_REPO}}
             docker run -itd -p 3000:3000 --name do-it-client ${{secrets.DOCKERHUB_USERNAME}}/${{secrets.DOCKER_REPO}}:latest
             docker image prune -f
