@@ -1,0 +1,12 @@
+version: "3"
+services:
+  server:
+    image: juhyunglee/do-it-client:latest
+    restart: on-failure
+    container_name: do-it-client-green
+    ports:
+      - 3001:3000
+
+networks:
+  default:
+    name: doitNetwork
