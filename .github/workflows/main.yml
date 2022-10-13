@@ -48,7 +48,7 @@ jobs:
           host: ${{ secrets.EC2_HOST }}
           username: ${{ secrets.EC2_USERNAME }}
           key: ${{ secrets.EC2_PEM_KEY }}
-          source: "/home/runner/work/do-it-server/do-it-server/deploy/deploy.sh"
+          source: "/home/runner/work/do-it-client/do-it-client/deploy/deploy.sh"
           target: "/home/ubuntu/do-it-deploy/script/client/deploy.sh"
 
       - uses: actions/checkout@master
@@ -58,7 +58,7 @@ jobs:
           host: ${{ secrets.EC2_HOST }}
           username: ${{ secrets.EC2_USERNAME }}
           key: ${{ secrets.EC2_PEM_KEY }}
-          source: "/home/runner/work/do-it-server/do-it-server/deploy/docker-compose/docker-compose.red.yml"
+          source: "/home/runner/work/do-it-client/do-it-client/deploy/docker-compose/docker-compose.red.yml"
           target: "/home/ubuntu/do-it-deploy/docker/client/"
 
       - uses: actions/checkout@master
@@ -68,7 +68,7 @@ jobs:
           host: ${{ secrets.EC2_HOST }}
           username: ${{ secrets.EC2_USERNAME }}
           key: ${{ secrets.EC2_PEM_KEY }}
-          source: "/home/runner/work/do-it-server/do-it-server/deploy/docker-compose/docker-compose.green.yml"
+          source: "/home/runner/work/do-it-client/do-it-client/deploy/docker-compose/docker-compose.green.yml"
           target: "/home/ubuntu/do-it-deploy/docker/client/"
 
       - name: deploy docker image to EC2
