@@ -22,16 +22,20 @@ fi
 echo "do-it-client-${START_CONTAINER} will up"
 
 sudo docker-compose -p do-it-client-${START_CONTAINER} -f ${DOCKER_COMPOSE_PATH}/docker-compose.${START_CONTAINER}.yml up -d --build
-
+DOCKER_COMPOSE_RESULT=$?
 sleep 10
 
-echo "change nginx server port"
+if [[ $DOCKER_COMPOSE_RESULT -eq 0 ]]; then
+  echo "change nginx server port"
 
-sudo sed -i "s/${TERMINATE_PORT}/${START_PORT}/g" /etc/nginx/conf.d/service-url.inc
+  sudo sed -i "s/${TERMINATE_PORT}/${START_PORT}/g" /etc/nginx/conf.d/service-url.inc
 
-echo "nginx reload"
-sudo service nginx reload
+  echo "nginx reload"
+  sudo service nginx reload
 
-echo "do-it-client-${TERMINATE_CONTAINER} down"
-sudo docker-compose -p do-it-client-${TERMINATE_CONTAINER} down
-sudo docker image prune -f
+  echo "do-it-client-${TERMINATE_CONTAINER} down"
+  sudo docker-compose -p do-it-client-${TERMINATE_CONTAINER} down
+  sudo docker image prune -f
+else
+  echo "docker-compose-${START_CONTAINER} error occurs!"
+fi
