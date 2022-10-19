@@ -7,12 +7,11 @@ on:
   pull_request:
     branches: [ "master" ]
 
-  # Allows you to run this workflow manually from the Actions tab
-  workflow_dispatch:
+env:
+  RUNNER_PATH: "/home/runner/work/do-it-client/do-it-client"
+  AWS_DEPLOY_PATH: "/home/ubuntu/do-it-deploy"
 
-# A workflow run is made up of one or more jobs that can run sequentially or in parallel
 jobs:
-  # This workflow contains a single job called "build"
   build:
     runs-on: ubuntu-latest
 
@@ -48,8 +47,8 @@ jobs:
           host: ${{ secrets.EC2_HOST }}
           username: ${{ secrets.EC2_USERNAME }}
           key: ${{ secrets.EC2_PEM_KEY }}
-          source: "/home/runner/work/do-it-client/do-it-client/deploy/deploy.sh"
-          target: "/home/ubuntu/do-it-deploy/script/client/deploy.sh"
+          source: "${{ env.RUNNER_PATH }}/deploy/deploy.sh"
+          target: "${{ env.AWS_DEPLOY_PATH }}/script/client/deploy.sh"
 
       - uses: actions/checkout@master
       - name: compose-red file transfer by scp
@@ -58,8 +57,8 @@ jobs:
           host: ${{ secrets.EC2_HOST }}
           username: ${{ secrets.EC2_USERNAME }}
           key: ${{ secrets.EC2_PEM_KEY }}
-          source: "/home/runner/work/do-it-client/do-it-client/deploy/docker-compose/docker-compose.red.yml"
-          target: "/home/ubuntu/do-it-deploy/docker/client/"
+          source: "${{ env.RUNNER_PATH }}/deploy/docker-compose/docker-compose.red.yml"
+          target: "${{ env.AWS_DEPLOY_PATH }}/docker/client/"
 
       - uses: actions/checkout@master
       - name: compose-green file transfer by scp
@@ -68,8 +67,8 @@ jobs:
           host: ${{ secrets.EC2_HOST }}
           username: ${{ secrets.EC2_USERNAME }}
           key: ${{ secrets.EC2_PEM_KEY }}
-          source: "/home/runner/work/do-it-client/do-it-client/deploy/docker-compose/docker-compose.green.yml"
-          target: "/home/ubuntu/do-it-deploy/docker/client/"
+          source: "${{ env.RUNNER_PATH }}/deploy/docker-compose/docker-compose.green.yml"
+          target: "${{ env.AWS_DEPLOY_PATH }}/docker/client/"
 
       - name: deploy docker image to EC2
         uses: appleboy/ssh-action@master
@@ -81,5 +80,5 @@ jobs:
             sudo docker pull ${{secrets.DOCKERHUB_USERNAME}}/${{secrets.DOCKER_REPO}}
             sudo chmod -R 777 do-it-deploy
             sudo chown -R ubuntu do-it-deploy
-            BASH_RESULT=$(sh /home/ubuntu/do-it-deploy/script/client/deploy.sh | tail -1)
+            BASH_RESULT=$(sh ${{ env.AWS_DEPLOY_PATH }}/script/client/deploy.sh | tail -1)
             echo "${BASH_RESULT}"
