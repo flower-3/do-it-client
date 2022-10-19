@@ -23,9 +23,12 @@ echo "do-it-client-${START_CONTAINER} will up"
 
 sudo docker-compose -p do-it-client-${START_CONTAINER} -f ${DOCKER_COMPOSE_PATH}/docker-compose.${START_CONTAINER}.yml up -d --build
 DOCKER_COMPOSE_RESULT=$?
+
+echo "docker compose result : ${DOCKER_COMPOSE_RESULT}"
+
 sleep 10
 
-if [[ $DOCKER_COMPOSE_RESULT -eq 0 ]]; then
+if [ $DOCKER_COMPOSE_RESULT -eq 0 ]; then
   echo "change nginx server port"
 
   sudo sed -i "s/${TERMINATE_PORT}/${START_PORT}/g" /etc/nginx/conf.d/service-url.inc
